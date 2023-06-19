@@ -153,17 +153,23 @@ func (m *Image) Deserialize(r io.Reader) (err error) {
 
 	// Data
 	{
-		// Read size little endian
-		var size uint32
-		if err = binary.Read(r, binary.LittleEndian, &size); err != nil {
-			return fmt.Errorf("cannot read array size for Data: %s", err)
+		// // Read size little endian
+		// var size uint32
+		// if err = binary.Read(r, binary.LittleEndian, &size); err != nil {
+		// 	return fmt.Errorf("cannot read array size for Data: %s", err)
+		// }
+		// m.Data = make([]uint8, int(size))
+		// for i := 0; i < int(size); i++ {
+		// 	if err = ros.DeserializeMessageField(r, "uint8", &m.Data[i]); err != nil {
+		// 		return err
+		// 	}
+		// }
+
+		data, err := io.ReadAll(r)
+		if err != nil {
+			return err
 		}
-		m.Data = make([]uint8, int(size))
-		for i := 0; i < int(size); i++ {
-			if err = ros.DeserializeMessageField(r, "uint8", &m.Data[i]); err != nil {
-				return err
-			}
-		}
+		m.Data = data
 	}
 
 	return
